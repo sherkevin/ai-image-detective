@@ -5,84 +5,317 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>AI Image Detective Lab</title>
     <style>
-      :root { --ink:#1f2933; --muted:#5f6b76; --line:#d8dee4; --accent:#1f4e79; --soft:#eef4fa; }
-      * { box-sizing:border-box; }
-      body { margin:0; color:var(--ink); font-family:"Times New Roman","SimSun",serif; line-height:1.65; background:#fff; }
-      main { width:min(1080px, calc(100% - 32px)); margin:0 auto; padding:32px 0 48px; }
-      header { margin-bottom:24px; padding-bottom:18px; border-bottom:1px solid var(--line); }
-      h1 { margin:0 0 8px; font-size:30px; } h2 { margin:0 0 12px; font-size:21px; } p { margin-top:0; }
-      .muted { color:var(--muted); }
-      .layout { display:grid; grid-template-columns:320px minmax(0,1fr); gap:22px; align-items:start; }
-      section { border:1px solid var(--line); padding:18px; }
-      select,input { width:100%; } label { display:block; margin:14px 0 6px; font-weight:600; }
-      .gallery { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; }
-      .card { border:1px solid var(--line); padding:12px; background:#fff; }
-      .card.target { border-color:var(--accent); background:var(--soft); }
-      .shape { width:84px; height:84px; margin-bottom:10px; border:3px solid #25313d; }
-      .circle { border-radius:50%; } .diamond { transform:rotate(45deg) scale(.78); margin:8px 0 18px 8px; }
-      .red { background:#d64b3c; } .blue { background:#3a6ea5; } .yellow { background:#e0b43b; }
-      .plain { background-image:none; }
-      .stripe { background-image:repeating-linear-gradient(45deg, rgba(255,255,255,.45) 0 8px, transparent 8px 16px); }
-      .dot { background-image:radial-gradient(rgba(255,255,255,.55) 20%, transparent 22%); background-size:18px 18px; }
-      .score { color:var(--muted); font-size:14px; }
-      .bar { height:8px; margin-top:8px; background:var(--soft); }
-      .bar span { display:block; height:100%; background:var(--accent); }
-      @media (max-width:800px) { .layout { grid-template-columns:1fr; } }
+      :root {
+        --ink: #18212f;
+        --muted: #5f6b7a;
+        --line: #d8dee8;
+        --paper: #ffffff;
+        --soft: #f5f7fb;
+        --accent: #6b5b95;
+        --accent2: #1f7a68;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: "Inter", "Noto Sans SC", "Microsoft YaHei", Arial, sans-serif;
+        color: var(--ink);
+        background: #eff2f7;
+      }
+      header {
+        padding: 28px clamp(18px, 4vw, 48px);
+        background: linear-gradient(135deg, #fbfaff, #e8f4f0);
+        border-bottom: 1px solid var(--line);
+      }
+      h1 { margin: 0 0 8px; font-size: clamp(28px, 4vw, 42px); letter-spacing: 0; }
+      h2 { margin: 0 0 14px; font-size: 18px; }
+      h3 { margin: 0 0 8px; font-size: 15px; }
+      p { line-height: 1.7; }
+      .muted { color: var(--muted); margin: 0; }
+      main {
+        display: grid;
+        grid-template-columns: 330px 1fr;
+        gap: 18px;
+        max-width: 1320px;
+        margin: 0 auto;
+        padding: 18px;
+      }
+      section, aside {
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 18px;
+      }
+      .stack { display: grid; gap: 14px; }
+      .targetPanel {
+        display: grid;
+        place-items: center;
+        min-height: 210px;
+        border: 1px dashed #b8c3d1;
+        border-radius: 8px;
+        background: var(--soft);
+      }
+      .shape {
+        width: 112px;
+        height: 112px;
+        display: grid;
+        place-items: center;
+        border: 5px solid rgba(0,0,0,.12);
+      }
+      .circle { border-radius: 50%; }
+      .square { border-radius: 12px; }
+      .diamond { transform: rotate(45deg); border-radius: 8px; }
+      .diamond::after { transform: rotate(-45deg); }
+      .red { background: #d84f4f; }
+      .blue { background: #3679bd; }
+      .green { background: #2f9c76; }
+      .yellow { background: #e5b84b; }
+      .purple { background: #7b61aa; }
+      .stripe { background-image: repeating-linear-gradient(45deg, rgba(255,255,255,.55) 0 8px, transparent 8px 16px); }
+      .dot { background-image: radial-gradient(rgba(255,255,255,.7) 18%, transparent 20%); background-size: 24px 24px; }
+      .gridline { background-image: linear-gradient(rgba(255,255,255,.55) 2px, transparent 2px), linear-gradient(90deg, rgba(255,255,255,.55) 2px, transparent 2px); background-size: 22px 22px; }
+      .plain { background-image: none; }
+      .controls { display: grid; gap: 12px; }
+      .control {
+        padding: 10px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fbfcfe;
+      }
+      .control label { display: flex; justify-content: space-between; color: var(--muted); font-size: 14px; }
+      input, select {
+        width: 100%;
+        margin-top: 8px;
+      }
+      button {
+        border: 1px solid #514476;
+        background: var(--accent);
+        color: white;
+        border-radius: 6px;
+        padding: 10px 12px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      button.secondary {
+        background: white;
+        color: var(--accent);
+      }
+      .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+      .gallery {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(160px, 1fr));
+        gap: 12px;
+      }
+      .card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 12px;
+        background: white;
+      }
+      .card.target {
+        border-color: var(--accent2);
+        box-shadow: 0 0 0 2px rgba(31,122,104,.12);
+      }
+      .mini {
+        width: 64px;
+        height: 64px;
+        margin-bottom: 10px;
+      }
+      .score {
+        color: var(--muted);
+        font-size: 13px;
+        margin-top: 6px;
+      }
+      .bar {
+        height: 8px;
+        background: #e8edf3;
+        border-radius: 999px;
+        overflow: hidden;
+        margin-top: 8px;
+      }
+      .bar span { display: block; height: 100%; background: var(--accent2); }
+      .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+      th, td {
+        border-bottom: 1px solid var(--line);
+        padding: 8px;
+        text-align: left;
+      }
+      th { color: var(--muted); font-weight: 600; }
+      .vector {
+        display: grid;
+        gap: 7px;
+      }
+      .vrow {
+        display: grid;
+        grid-template-columns: 82px 1fr 40px;
+        gap: 8px;
+        align-items: center;
+        font-size: 13px;
+      }
+      .vbar {
+        height: 8px;
+        background: #e8edf3;
+        border-radius: 999px;
+        overflow: hidden;
+      }
+      .vbar span { display: block; height: 100%; background: var(--accent); }
+      @media (max-width: 980px) {
+        main { grid-template-columns: 1fr; }
+        .gallery { grid-template-columns: repeat(2, minmax(150px, 1fr)); }
+        .grid2 { grid-template-columns: 1fr; }
+      }
     </style>
   </head>
   <body>
+    <header>
+      <h1>图像检索实验室</h1>
+      <p class="muted">调节特征权重，观察图片如何被表示成向量、如何排序、为什么误判。</p>
+    </header>
     <main>
-      <header>
-        <h1>AI Image Detective Lab</h1>
-        <p class="muted">调节颜色、形状、纹理权重，观察“特征向量—相似度—最近邻检索”的变化。</p>
-      </header>
-      <div class="layout">
+      <aside class="stack">
         <section>
-          <h2>任务设置</h2>
-          <label for="target">目标图形</label><select id="target"></select>
-          <label for="colorWeight">颜色权重 <span id="colorValue"></span></label><input id="colorWeight" type="range" min="0" max="5" value="3" />
-          <label for="shapeWeight">形状权重 <span id="shapeValue"></span></label><input id="shapeWeight" type="range" min="0" max="5" value="3" />
-          <label for="textureWeight">纹理权重 <span id="textureValue"></span></label><input id="textureWeight" type="range" min="0" max="5" value="2" />
-          <p class="muted" style="margin-top:18px;">课堂问题：如果检索目标是“同类图标”，你会提高哪个权重？如果目标是“同色素材”，又该怎么调？</p>
+          <h2>目标图片</h2>
+          <div class="targetPanel"><div id="targetShape" class="shape"></div></div>
+          <label style="display:block;margin-top:12px">选择目标</label>
+          <select id="targetSelect"></select>
         </section>
-        <section><h2>相似度排序</h2><div id="gallery" class="gallery"></div></section>
+        <section>
+          <h2>特征权重</h2>
+          <div class="controls">
+            <div class="control"><label>颜色 <span id="colorVal">3</span></label><input id="color" type="range" min="0" max="5" value="3"></div>
+            <div class="control"><label>形状 <span id="shapeVal">3</span></label><input id="shape" type="range" min="0" max="5" value="3"></div>
+            <div class="control"><label>纹理 <span id="textureVal">2</span></label><input id="texture" type="range" min="0" max="5" value="2"></div>
+            <div class="control"><label>边缘复杂度 <span id="edgeVal">2</span></label><input id="edge" type="range" min="0" max="5" value="2"></div>
+            <div class="control"><label>深度特征 <span id="deepVal">1</span></label><input id="deep" type="range" min="0" max="5" value="1"></div>
+          </div>
+        </section>
+        <section>
+          <h2>课堂挑战</h2>
+          <div class="row">
+            <button class="secondary" data-preset="color">找同色素材</button>
+            <button class="secondary" data-preset="shape">找同类图形</button>
+            <button class="secondary" data-preset="robust">降低表面误判</button>
+          </div>
+        </section>
+      </aside>
+      <div class="stack">
+        <section>
+          <h2>1. 相似度排序</h2>
+          <div id="gallery" class="gallery"></div>
+        </section>
+        <section class="grid2">
+          <div>
+            <h2>2. 目标特征向量</h2>
+            <div id="vector" class="vector"></div>
+          </div>
+          <div>
+            <h2>3. 误判分析</h2>
+            <table>
+              <thead><tr><th>观察项</th><th>当前结论</th></tr></thead>
+              <tbody id="analysis"></tbody>
+            </table>
+          </div>
+        </section>
       </div>
     </main>
     <script>
       const items = [
-        { id:"A", name:"红色圆形条纹", color:"red", shape:"circle", texture:"stripe", vector:[1,0,0,1,0,1,0] },
-        { id:"B", name:"红色方形纯色", color:"red", shape:"square", texture:"plain", vector:[1,0,0,0,1,0,1] },
-        { id:"C", name:"蓝色圆形圆点", color:"blue", shape:"circle", texture:"dot", vector:[0,1,0,1,0,0,0] },
-        { id:"D", name:"黄色菱形条纹", color:"yellow", shape:"diamond", texture:"stripe", vector:[0,0,1,0,0,1,0] },
-        { id:"E", name:"蓝色方形纯色", color:"blue", shape:"square", texture:"plain", vector:[0,1,0,0,1,0,1] },
-        { id:"F", name:"黄色圆形纯色", color:"yellow", shape:"circle", texture:"plain", vector:[0,0,1,1,0,0,1] },
-        { id:"G", name:"红色菱形圆点", color:"red", shape:"diamond", texture:"dot", vector:[1,0,0,0,0,0,0] },
-        { id:"H", name:"蓝色菱形条纹", color:"blue", shape:"diamond", texture:"stripe", vector:[0,1,0,0,0,1,0] }
+        { id:"A", name:"红色圆形条纹", color:"red", shape:"circle", texture:"stripe", edge:2, deep:[.92,.18,.22,.55] },
+        { id:"B", name:"红色方形纯色", color:"red", shape:"square", texture:"plain", edge:1, deep:[.72,.22,.18,.28] },
+        { id:"C", name:"蓝色圆形圆点", color:"blue", shape:"circle", texture:"dot", edge:3, deep:[.28,.84,.25,.62] },
+        { id:"D", name:"黄色菱形条纹", color:"yellow", shape:"diamond", texture:"stripe", edge:4, deep:[.34,.25,.78,.68] },
+        { id:"E", name:"绿色方形网格", color:"green", shape:"square", texture:"gridline", edge:4, deep:[.18,.68,.44,.73] },
+        { id:"F", name:"黄色圆形纯色", color:"yellow", shape:"circle", texture:"plain", edge:1, deep:[.45,.24,.73,.36] },
+        { id:"G", name:"红色菱形圆点", color:"red", shape:"diamond", texture:"dot", edge:3, deep:[.80,.31,.33,.66] },
+        { id:"H", name:"蓝色菱形条纹", color:"blue", shape:"diamond", texture:"stripe", edge:4, deep:[.27,.86,.48,.71] },
+        { id:"I", name:"紫色圆形网格", color:"purple", shape:"circle", texture:"gridline", edge:4, deep:[.40,.48,.90,.76] },
+        { id:"J", name:"绿色菱形纯色", color:"green", shape:"diamond", texture:"plain", edge:2, deep:[.19,.70,.49,.41] },
+        { id:"K", name:"紫色方形圆点", color:"purple", shape:"square", texture:"dot", edge:3, deep:[.38,.50,.86,.59] },
+        { id:"L", name:"蓝色方形条纹", color:"blue", shape:"square", texture:"stripe", edge:3, deep:[.25,.88,.31,.58] }
       ];
-      const targetEl = document.querySelector("#target");
-      const galleryEl = document.querySelector("#gallery");
-      const sliders = { color:document.querySelector("#colorWeight"), shape:document.querySelector("#shapeWeight"), texture:document.querySelector("#textureWeight") };
-      items.forEach(item => { const option = document.createElement("option"); option.value = item.id; option.textContent = `${item.id}. ${item.name}`; targetEl.appendChild(option); });
-      function weights() {
-        const color = Number(sliders.color.value), shape = Number(sliders.shape.value), texture = Number(sliders.texture.value);
-        document.querySelector("#colorValue").textContent = color;
-        document.querySelector("#shapeValue").textContent = shape;
-        document.querySelector("#textureValue").textContent = texture;
-        return [color, color, color, shape, shape, texture, texture];
+      const featureNames = ["颜色R/主色", "蓝绿通道", "形状轮廓", "纹理/边缘"];
+      const targetSelect = document.querySelector("#targetSelect");
+      const targetShape = document.querySelector("#targetShape");
+      const gallery = document.querySelector("#gallery");
+      const vector = document.querySelector("#vector");
+      const analysis = document.querySelector("#analysis");
+      items.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item.id;
+        option.textContent = `${item.id}. ${item.name}`;
+        targetSelect.appendChild(option);
+      });
+      function same(a,b,key){ return a[key] === b[key] ? 1 : 0; }
+      function deepSimilarity(a,b){
+        const dist = Math.sqrt(a.deep.reduce((sum, v, i) => sum + Math.pow(v - b.deep[i], 2), 0));
+        return Math.max(0, 1 - dist / 1.4);
       }
       function similarity(a, b, w) {
-        let score = 0, max = 0;
-        for (let i = 0; i < a.length; i += 1) { max += w[i]; score += a[i] === b[i] ? w[i] : 0; }
-        return max === 0 ? 0 : score / max;
+        const color = same(a,b,"color");
+        const shape = same(a,b,"shape");
+        const texture = same(a,b,"texture");
+        const edge = 1 - Math.min(1, Math.abs(a.edge - b.edge) / 4);
+        const deep = deepSimilarity(a,b);
+        const totalWeight = w.color + w.shape + w.texture + w.edge + w.deep || 1;
+        const score = (color*w.color + shape*w.shape + texture*w.texture + edge*w.edge + deep*w.deep) / totalWeight;
+        return { score, color, shape, texture, edge, deep };
       }
       function render() {
-        const target = items.find(item => item.id === targetEl.value) || items[0];
-        const w = weights();
-        const ranked = items.map(item => ({ ...item, sim: similarity(target.vector, item.vector, w) })).sort((a, b) => b.sim - a.sim);
-        galleryEl.innerHTML = ranked.map(item => `<article class="card ${item.id === target.id ? "target" : ""}"><div class="shape ${item.color} ${item.shape} ${item.texture}"></div><strong>${item.id}. ${item.name}</strong><div class="score">相似度：${item.sim.toFixed(2)}${item.id === target.id ? "（目标）" : ""}</div><div class="bar"><span style="width:${Math.round(item.sim * 100)}%"></span></div></article>`).join("");
+        const target = items.find(x => x.id === targetSelect.value) || items[0];
+        targetShape.className = `shape ${target.color} ${target.shape} ${target.texture}`;
+        const w = ["color","shape","texture","edge","deep"].reduce((acc, id) => {
+          acc[id] = Number(document.querySelector("#" + id).value);
+          document.querySelector("#" + id + "Val").textContent = acc[id];
+          return acc;
+        }, {});
+        const ranked = items.map(item => ({ ...item, sim: similarity(target, item, w) })).sort((a,b) => b.sim.score - a.sim.score);
+        gallery.innerHTML = ranked.map(item => `
+          <article class="card ${item.id === target.id ? "target" : ""}">
+            <div class="shape mini ${item.color} ${item.shape} ${item.texture}"></div>
+            <strong>${item.id}. ${item.name}</strong>
+            <div class="score">相似度：${item.sim.score.toFixed(2)}${item.id === target.id ? "（目标）" : ""}</div>
+            <div class="bar"><span style="width:${Math.round(item.sim.score * 100)}%"></span></div>
+            <div class="score">颜色 ${item.sim.color.toFixed(1)} / 形状 ${item.sim.shape.toFixed(1)} / 纹理 ${item.sim.texture.toFixed(1)} / 深度 ${item.sim.deep.toFixed(2)}</div>
+          </article>
+        `).join("");
+        vector.innerHTML = target.deep.map((value, i) => `
+          <div class="vrow"><span>${featureNames[i]}</span><div class="vbar"><span style="width:${Math.round(value*100)}%"></span></div><span>${value.toFixed(2)}</span></div>
+        `).join("");
+        const firstWrong = ranked.find(x => x.id !== target.id && (x.color !== target.color || x.shape !== target.shape));
+        analysis.innerHTML = `
+          <tr><td>Top-1 非目标</td><td>${ranked[1].id}. ${ranked[1].name}，相似度 ${ranked[1].sim.score.toFixed(2)}</td></tr>
+          <tr><td>主要相似来源</td><td>${dominant(ranked[1].sim)}</td></tr>
+          <tr><td>可能误判</td><td>${firstWrong ? `${firstWrong.id}. ${firstWrong.name} 可能因某一类特征权重过高排在前面。` : "暂未观察到明显误判。"}</td></tr>
+          <tr><td>改进建议</td><td>${suggest(w)}</td></tr>
+        `;
       }
-      targetEl.addEventListener("change", render);
-      Object.values(sliders).forEach(slider => slider.addEventListener("input", render));
+      function dominant(sim) {
+        const pairs = [["颜色", sim.color], ["形状", sim.shape], ["纹理", sim.texture], ["边缘", sim.edge], ["深度特征", sim.deep]];
+        return pairs.sort((a,b)=>b[1]-a[1])[0][0];
+      }
+      function suggest(w) {
+        if (w.color > w.shape + w.deep) return "当前更像同色检索；若要找同类图形，可提高形状和深度特征权重。";
+        if (w.shape > w.color + w.texture) return "当前更像形状检索；若颜色也重要，可提高颜色权重并记录误判变化。";
+        if (w.deep >= 4) return "深度特征权重较高，适合讨论模型特征，但需要更多真实图片验证。";
+        return "尝试分别提高某一项权重，比较排序变化，并记录一条误判案例。";
+      }
+      document.querySelectorAll("input").forEach(x => x.addEventListener("input", render));
+      targetSelect.addEventListener("change", render);
+      document.querySelectorAll("[data-preset]").forEach(btn => btn.addEventListener("click", () => {
+        const p = btn.dataset.preset;
+        const presets = {
+          color: { color:5, shape:1, texture:1, edge:1, deep:1 },
+          shape: { color:1, shape:5, texture:1, edge:2, deep:2 },
+          robust: { color:2, shape:3, texture:2, edge:3, deep:4 }
+        };
+        Object.entries(presets[p]).forEach(([id, value]) => document.querySelector("#" + id).value = value);
+        render();
+      }));
+      targetSelect.value = "A";
       render();
     </script>
   </body>
