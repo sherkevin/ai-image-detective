@@ -1,40 +1,47 @@
-# AI Image Detective：计算机视觉项目课
+# 图像侦探：计算机视觉项目课
 
-这是一套以计算机视觉课程与工程实践为主体的高中 AI 项目教材。仓库主路径保留完整 lesson、notebook、图像素材、训练脚本和部署示例，课堂展示只在首页、目录与少量导读层做整理。
+这是一套面向高中人工智能课程、科创社团和校本项目的计算机视觉教材。课程围绕一个清晰作品展开：做出一个能够描述图片特征、计算相似度、检索相近图像，并解释误判原因的“图像侦探”系统。
 
-课程主线是：**从感知机、OpenCV、CNN、迁移学习到目标检测与图像检索应用**。学习者最终完成一个“图像侦探”项目：建立图片库，训练或调用视觉模型，完成分类、检索、误判分析和展示。
+本书先用颜色、形状、纹理等可观察特征建立直觉，再逐步进入像素、向量、卷积、迁移学习、目标检测和图像检索。它强调“看见算法如何工作”，而不是把视觉模型包装成不可解释的黑箱。
 
-## 课程主体
+## 课程主线
 
-| 单元 | 主题 | 主要材料 |
+| 模块 | 章节 | 核心问题 | 项目产出 |
+| --- | --- | --- | --- |
+| 基础篇 | 第 0-4 章 | 机器怎样把图片变成可计算对象 | 特征表、向量表示、相似度记录 |
+| 实现篇 | 第 5-6 章 | 怎样做出一个可解释检索原型 | 浏览器检索实验、误判分析表 |
+| 进阶篇 | 第 7-10 章 | 怎样从手工特征走向真实视觉模型 | 卷积理解、图文检索、向量库、测试集 |
+| 展示篇 | 第 11-12 章 | 怎样形成可展示的视觉项目 | 数据说明、展示脚本、项目档案 |
+
+## 最终作品
+
+结课作品是一份可以打开、可以演示、可以解释的项目档案，至少包含：
+
+- 一个可运行的图像检索页面；
+- 一组图片或图形数据集；
+- 一套特征表示和相似度计算方法；
+- 十个检索查询和对应结果；
+- 误判案例、原因分析和改进记录；
+- 一份课堂展示脚本。
+
+## 推荐学习路径
+
+| 课型 | 推荐章节 | 适合场景 |
 | --- | --- | --- |
-| Neural Networks | Perceptron 与神经网络基础 | `lessons/3-NeuralNetworks/03-Perceptron/` |
-| Computer Vision 06 | OpenCV 与传统视觉 | `lessons/4-ComputerVision/06-IntroCV/` |
-| Computer Vision 07 | CNN 与视觉模型结构 | `lessons/4-ComputerVision/07-ConvNets/` |
-| Computer Vision 08 | Transfer Learning | `lessons/4-ComputerVision/08-TransferLearning/` |
-| Computer Vision 11 | Object Detection | `lessons/4-ComputerVision/11-ObjectDetection/` |
-| CV Recipes | 图像分类工程实践 | `scenarios/classification/` |
-| CV Recipes | 目标检测工程实践 | `scenarios/detection/` |
-| HTML Demo | 图像相似度应用前端 | `contrib/html_demo/` |
-
-## 高中课堂路径
-
-| 层级 | 学习目标 | 推荐单元 |
-| --- | --- | --- |
-| 入门课 | 图片、像素、边缘、运动检测 | 06-IntroCV |
-| 项目课 | CNN、迁移学习、图像分类 | 07-ConvNets、08-TransferLearning、classification |
-| 科创社团 | 目标检测、部署、图像相似度应用 | 11-ObjectDetection、detection、html_demo |
+| 入门体验 | 第 0-5 章 | 2-6 课时计算机视觉入门课 |
+| 项目实践 | 第 0-10 章 | 校本课程、项目化学习、研究性学习 |
+| 科创拓展 | 全书与附录资源 | 社团、竞赛准备、个人作品集 |
 
 ## 互动实验室
 
-[图像检索实验室](https://sherkevin.github.io/ai-image-detective/labs/playground.html) 是本仓库的轻量课堂前端，用来演示特征权重、相似度排序、向量表示和误判分析。正式项目代码、Notebook 与图像素材以 lesson 和 scenarios 目录为准。
-
-## 原始课程与许可
-
-本仓库主体材料来自 Microsoft 官方课程 [AI For Beginners](https://github.com/microsoft/AI-For-Beginners)（MIT License，约 47k stars）的 Computer Vision 单元，并加入 [Computer Vision Recipes](https://github.com/microsoft/computervision-recipes)（MIT License，约 9.8k stars）的分类、检测和 HTML Demo 工程实践。D2L 视觉章节保留在 `source-project/d2l-zh/` 作为深度学习教材参考。许可与来源见 [开源许可与课程资源](LICENSES.md)。
+[图像检索实验室](https://sherkevin.github.io/ai-image-detective/labs/playground.html) 用来演示特征权重、相似度排序、向量表示和误判分析。它不是最终答案，而是课程中用于观察视觉检索行为的最小可运行模型。
 
 ## 阅读方式
 
 在线阅读：[https://sherkevin.github.io/ai-image-detective/](https://sherkevin.github.io/ai-image-detective/)
 
-本仓库采用 Docsify / GitBook 兼容目录组织。`SUMMARY.md` 可供 GitBook 类工具读取，`sidebar.md` 供在线站点使用。
+本仓库采用在线电子书目录组织。`SUMMARY.md` 可供电子书工具读取，`sidebar.md` 供在线站点使用。
+
+## 透明说明
+
+本教材的课程主线、课堂任务、评价方式和项目展示结构面向高中场景重新组织。仓库中也保留了若干公开课程资源、代码示例和许可文本，供教师备课、代码阅读和进阶实践使用。相关说明见 [致谢与许可](LICENSES.md)。

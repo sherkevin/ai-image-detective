@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AI Image Detective Lab</title>
+    <title>图像检索实验室</title>
     <style>
       :root {
         --ink: #18212f;
@@ -287,7 +287,7 @@
         `).join("");
         const firstWrong = ranked.find(x => x.id !== target.id && (x.color !== target.color || x.shape !== target.shape));
         analysis.innerHTML = `
-          <tr><td>Top-1 非目标</td><td>${ranked[1].id}. ${ranked[1].name}，相似度 ${ranked[1].sim.score.toFixed(2)}</td></tr>
+          <tr><td>第一名之外的最近结果</td><td>${ranked[1].id}. ${ranked[1].name}，相似度 ${ranked[1].sim.score.toFixed(2)}</td></tr>
           <tr><td>主要相似来源</td><td>${dominant(ranked[1].sim)}</td></tr>
           <tr><td>可能误判</td><td>${firstWrong ? `${firstWrong.id}. ${firstWrong.name} 可能因某一类特征权重过高排在前面。` : "暂未观察到明显误判。"}</td></tr>
           <tr><td>改进建议</td><td>${suggest(w)}</td></tr>
