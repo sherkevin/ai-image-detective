@@ -2,7 +2,7 @@
 
 ## 项目结构
 
-本章对应 [互动实验](../labs/playground.html)。每个图形由三类信息组成：
+本章对应 [互动实验](https://sherkevin.github.io/ai-image-detective/labs/playground.html)。每个图形由三类信息组成：
 
 ```js
 {
@@ -32,7 +32,7 @@
 
 ### 进阶
 
-增加一个“大小”特征，让学生观察大小权重如何影响排序。
+增加一个“大小”特征，观察大小权重如何影响排序。
 
 ### 挑战
 

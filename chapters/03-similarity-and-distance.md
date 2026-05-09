@@ -10,7 +10,7 @@
 
 不是每个特征都同样重要。找同色素材时，颜色权重应该更高；找图标类别时，形状权重可能更高。
 
-在 [互动实验](../labs/playground.html) 中，学生可以调节：
+在 [互动实验](https://sherkevin.github.io/ai-image-detective/labs/playground.html) 中，可以调节：
 
 - 颜色权重；
 - 形状权重；
