@@ -4,193 +4,28 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>AI Image Detective</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css" />
     <style>
-      :root {
-        --ink: #1f2933;
-        --muted: #5f6b76;
-        --line: #d8dee4;
-        --accent: #1f4e79;
-        --soft: #eef4fa;
-      }
-      * { box-sizing: border-box; }
-      body {
-        margin: 0;
-        color: var(--ink);
-        font-family: "Times New Roman", "SimSun", serif;
-        line-height: 1.65;
-        background: #fff;
-      }
-      main {
-        width: min(1080px, calc(100% - 32px));
-        margin: 0 auto;
-        padding: 32px 0 48px;
-      }
-      header {
-        margin-bottom: 24px;
-        padding-bottom: 18px;
-        border-bottom: 1px solid var(--line);
-      }
-      h1 { margin: 0 0 8px; font-size: 30px; }
-      h2 { margin: 0 0 12px; font-size: 21px; }
-      p { margin-top: 0; }
-      .muted { color: var(--muted); }
-      .layout {
-        display: grid;
-        grid-template-columns: 320px minmax(0, 1fr);
-        gap: 22px;
-        align-items: start;
-      }
-      section {
-        border: 1px solid var(--line);
-        padding: 18px;
-      }
-      select, input {
-        width: 100%;
-      }
-      label {
-        display: block;
-        margin: 14px 0 6px;
-        font-weight: 600;
-      }
-      .gallery {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 12px;
-      }
-      .card {
-        border: 1px solid var(--line);
-        padding: 12px;
-        background: #fff;
-      }
-      .card.target {
-        border-color: var(--accent);
-        background: var(--soft);
-      }
-      .shape {
-        width: 84px;
-        height: 84px;
-        margin-bottom: 10px;
-        border: 3px solid #25313d;
-      }
-      .circle { border-radius: 50%; }
-      .diamond { transform: rotate(45deg) scale(0.78); margin: 8px 0 18px 8px; }
-      .red { background: #d64b3c; }
-      .blue { background: #3a6ea5; }
-      .yellow { background: #e0b43b; }
-      .plain { background-image: none; }
-      .stripe { background-image: repeating-linear-gradient(45deg, rgba(255,255,255,.45) 0 8px, transparent 8px 16px); }
-      .dot { background-image: radial-gradient(rgba(255,255,255,.55) 20%, transparent 22%); background-size: 18px 18px; }
-      .score { color: var(--muted); font-size: 14px; }
-      .bar {
-        height: 8px;
-        margin-top: 8px;
-        background: var(--soft);
-      }
-      .bar span {
-        display: block;
-        height: 100%;
-        background: var(--accent);
-      }
-      @media (max-width: 800px) {
-        .layout { grid-template-columns: 1fr; }
-      }
+      :root { --theme-color: #1f4e79; }
+      body { font-family: "Times New Roman", "SimSun", serif; }
+      .markdown-section { max-width: 900px; }
+      .markdown-section h1, .markdown-section h2, .markdown-section h3 { font-weight: 600; }
+      .markdown-section blockquote { border-left-color: #1f4e79; }
     </style>
   </head>
   <body>
-    <main>
-      <header>
-        <h1>AI Image Detective</h1>
-        <p class="muted">调节颜色、形状、纹理权重，观察“特征向量—相似度—最近邻检索”的变化。</p>
-      </header>
-
-      <div class="layout">
-        <section>
-          <h2>任务设置</h2>
-          <label for="target">目标图形</label>
-          <select id="target"></select>
-          <label for="colorWeight">颜色权重 <span id="colorValue"></span></label>
-          <input id="colorWeight" type="range" min="0" max="5" value="3" />
-          <label for="shapeWeight">形状权重 <span id="shapeValue"></span></label>
-          <input id="shapeWeight" type="range" min="0" max="5" value="3" />
-          <label for="textureWeight">纹理权重 <span id="textureValue"></span></label>
-          <input id="textureWeight" type="range" min="0" max="5" value="2" />
-          <p class="muted" style="margin-top: 18px;">课堂问题：如果检索目标是“同类图标”，你会提高哪个权重？如果目标是“同色素材”，又该怎么调？</p>
-        </section>
-
-        <section>
-          <h2>相似度排序</h2>
-          <div id="gallery" class="gallery"></div>
-        </section>
-      </div>
-    </main>
-
+    <div id="app">正在载入课程...</div>
     <script>
-      const items = [
-        { id: "A", name: "红色圆形条纹", color: "red", shape: "circle", texture: "stripe", vector: [1,0,0,1,0,1,0] },
-        { id: "B", name: "红色方形纯色", color: "red", shape: "square", texture: "plain", vector: [1,0,0,0,1,0,1] },
-        { id: "C", name: "蓝色圆形圆点", color: "blue", shape: "circle", texture: "dot", vector: [0,1,0,1,0,0,0] },
-        { id: "D", name: "黄色菱形条纹", color: "yellow", shape: "diamond", texture: "stripe", vector: [0,0,1,0,0,1,0] },
-        { id: "E", name: "蓝色方形纯色", color: "blue", shape: "square", texture: "plain", vector: [0,1,0,0,1,0,1] },
-        { id: "F", name: "黄色圆形纯色", color: "yellow", shape: "circle", texture: "plain", vector: [0,0,1,1,0,0,1] },
-        { id: "G", name: "红色菱形圆点", color: "red", shape: "diamond", texture: "dot", vector: [1,0,0,0,0,0,0] },
-        { id: "H", name: "蓝色菱形条纹", color: "blue", shape: "diamond", texture: "stripe", vector: [0,1,0,0,0,1,0] }
-      ];
-
-      const targetEl = document.querySelector("#target");
-      const galleryEl = document.querySelector("#gallery");
-      const sliders = {
-        color: document.querySelector("#colorWeight"),
-        shape: document.querySelector("#shapeWeight"),
-        texture: document.querySelector("#textureWeight")
+      window.$docsify = {
+        name: "AI Image Detective",
+        repo: "sherkevin/ai-image-detective",
+        loadSidebar: true,
+        subMaxLevel: 2,
+        auto2top: true,
+        search: "auto"
       };
-
-      items.forEach(item => {
-        const option = document.createElement("option");
-        option.value = item.id;
-        option.textContent = `${item.id}. ${item.name}`;
-        targetEl.appendChild(option);
-      });
-
-      function weights() {
-        const color = Number(sliders.color.value);
-        const shape = Number(sliders.shape.value);
-        const texture = Number(sliders.texture.value);
-        document.querySelector("#colorValue").textContent = color;
-        document.querySelector("#shapeValue").textContent = shape;
-        document.querySelector("#textureValue").textContent = texture;
-        return [color, color, color, shape, shape, texture, texture];
-      }
-
-      function similarity(a, b, w) {
-        let score = 0;
-        let max = 0;
-        for (let i = 0; i < a.length; i += 1) {
-          max += w[i];
-          score += a[i] === b[i] ? w[i] : 0;
-        }
-        return max === 0 ? 0 : score / max;
-      }
-
-      function render() {
-        const target = items.find(item => item.id === targetEl.value) || items[0];
-        const w = weights();
-        const ranked = items
-          .map(item => ({ ...item, sim: similarity(target.vector, item.vector, w) }))
-          .sort((a, b) => b.sim - a.sim);
-
-        galleryEl.innerHTML = ranked.map(item => `
-          <article class="card ${item.id === target.id ? "target" : ""}">
-            <div class="shape ${item.color} ${item.shape} ${item.texture}"></div>
-            <strong>${item.id}. ${item.name}</strong>
-            <div class="score">相似度：${item.sim.toFixed(2)}${item.id === target.id ? "（目标）" : ""}</div>
-            <div class="bar"><span style="width:${Math.round(item.sim * 100)}%"></span></div>
-          </article>
-        `).join("");
-      }
-
-      targetEl.addEventListener("change", render);
-      Object.values(sliders).forEach(slider => slider.addEventListener("input", render));
-      render();
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/docsify@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
   </body>
 </html>
