@@ -1,6 +1,17 @@
 # 目录
 
 * [导读](README.md)
+* [总览：从图像特征到视觉检索系统](deep/00-full-book-map.md)
+* [第 1 单元：图片、像素与特征](deep/01-pixels-features.md)
+* [第 2 单元：感知机与分类](deep/02-perceptron-classifier.md)
+* [第 3 单元：传统视觉：边缘、轮廓与运动](deep/03-opencv-traditional-vision.md)
+* [第 4 单元：卷积与特征图](deep/04-convolution-feature-map.md)
+* [第 5 单元：卷积神经网络](deep/05-cnn-training.md)
+* [第 6 单元：迁移学习与数据增强](deep/06-transfer-augmentation.md)
+* [第 7 单元：目标检测](deep/07-object-detection.md)
+* [第 8 单元：图文向量与多模态检索](deep/08-multimodal-search.md)
+* [第 9 单元：数据集、标注与评价指标](deep/09-dataset-metrics.md)
+* [第 10 单元：图像检索作品集与部署](deep/10-project-deployment.md)
 * [第 0 章：课程地图与项目成品](chapters/00-course-map.md)
 * [项目路线](chapters/02-learning-path.md)
 * [第 1 章：机器怎样看见图片](chapters/01-how-computers-see.md)

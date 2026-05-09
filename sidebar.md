@@ -1,30 +1,37 @@
 - [导读](README.md)
 
-- 课程地图
+- 教材主体：计算机视觉项目课
+  - [总览：从图像特征到视觉检索系统](deep/00-full-book-map.md)
+  - [第 1 单元：图片、像素与特征](deep/01-pixels-features.md)
+  - [第 2 单元：感知机与分类](deep/02-perceptron-classifier.md)
+  - [第 3 单元：传统视觉：边缘、轮廓与运动](deep/03-opencv-traditional-vision.md)
+  - [第 4 单元：卷积与特征图](deep/04-convolution-feature-map.md)
+  - [第 5 单元：卷积神经网络](deep/05-cnn-training.md)
+  - [第 6 单元：迁移学习与数据增强](deep/06-transfer-augmentation.md)
+  - [第 7 单元：目标检测](deep/07-object-detection.md)
+  - [第 8 单元：图文向量与多模态检索](deep/08-multimodal-search.md)
+  - [第 9 单元：数据集、标注与评价指标](deep/09-dataset-metrics.md)
+  - [第 10 单元：图像检索作品集与部署](deep/10-project-deployment.md)
+
+- 项目路径：图像侦探
   - [第 0 章：课程地图与项目成品](chapters/00-course-map.md)
   - [项目路线](chapters/02-learning-path.md)
-
-- 基础篇：从图片到向量
   - [第 1 章：机器怎样看见图片](chapters/01-how-computers-see.md)
   - [系统地图：视觉项目的五个环节](chapters/01-vision-system-map.md)
   - [第 2 章：特征、向量与表示](chapters/02-features-and-vectors.md)
   - [第 3 章：相似度与距离](chapters/03-similarity-and-distance.md)
   - [第 4 章：最近邻检索与排序](chapters/04-nearest-neighbor.md)
-
-- 实现篇：做出可解释原型
   - [第 5 章：动手做图像检索系统](chapters/05-build-image-search.md)
   - [第 6 章：误判分析与课堂延伸](chapters/06-errors-and-extension.md)
-  - [图像检索实验室](labs/playground.html ':target=_blank')
-
-- 进阶篇：进入真实视觉模型
   - [第 7 章：从手工特征到卷积表示](chapters/07-from-features-to-cnn.md)
   - [第 8 章：图文向量与多模态检索](chapters/08-clip-and-multimodal.md)
   - [第 9 章：图片向量库与近似最近邻检索](chapters/09-image-vector-database.md)
   - [第 10 章：数据集、标注与评价指标](chapters/10-dataset-and-metrics.md)
-
-- 展示篇：形成可评价作品
   - [第 11 章：从课堂演示到视觉搜索项目](chapters/11-vision-search-project.md)
   - [第 12 章：结课图像检索作品集](chapters/12-capstone.md)
+
+- 课堂配套
+  - [图像检索实验室](https://sherkevin.github.io/ai-image-detective/labs/playground.html ':target=_blank')
   - [教师指南](docs/teacher-guide.md)
   - [学习任务单](docs/student-worksheet.md)
   - [评价量规](docs/rubric.md)
